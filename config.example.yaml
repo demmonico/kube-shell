@@ -1,0 +1,19 @@
+# Kube-shell config file
+#
+# put string values escaped with ", like
+#   test: "value"
+# put array values with -, like
+#   list:
+#     - value1
+#     - value2
+
+cluster1:
+  production:
+    pull_image: "deployer.docker.io/cluster1:production"
+
+cluster2:
+  production:
+    pull_image: "deployer.docker.io/cluster2:production"
+    env_file: ".env.cluster2"
+  staging:
+    pull_image: "deployer.docker.io/cluster2:staging"
