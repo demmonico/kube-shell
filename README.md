@@ -4,42 +4,7 @@ This is a set of Bash scripts aimed in help to connect / manage Kubernetes clust
 Useful, when you already have pre-built Docker images (e.g. deployer image for CI/CD), 
 which already have injected `kubeconfig` files and installed special software like `Helm`. 
 It can be stored at your container registry and pulled by CI/CD runner (e.g. GitLab runner). 
-
-<details><summary>Example of deployer's Dockerfile</summary>
-```shell script
-FROM alpine:latest
-
-ARG KUBECONFIG_FILE
-ARG HELM_VERSION
-ARG ENVIRONMENT
-ARG LOCATION
-
-ENV K8S_ENVIRONMENT=${ENVIRONMENT}
-ENV K8S_LOCATION=${LOCATION}
-
-RUN apk update && apk add curl && apk add --no-cache --virtual deps \
-    bash \
-    openssl
-
-# Install kubectl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
-    chmod +x ./kubectl && \
-    mv ./kubectl /usr/local/bin/kubectl
-
-# Add kubectl config
-RUN mkdir ~/.kube
-COPY ./$KUBECONFIG_FILE /root/.kube/config
-
-# Install helm
-RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > ./get_helm.sh && \
-    chmod 700 ./get_helm.sh && \
-    ./get_helm.sh -v $HELM_VERSION
-
-# Cleanup
-RUN apk del deps && \
-    rm get_helm.sh
-```
-</details>
+See deployer's example at the (Others section)[#others] 
 
 ### Install
 
@@ -125,5 +90,43 @@ To mount in `rw` mode just run `ksh` with option `--rw`.
 
 ```shell script
 ksh --rw -c cluster_a
+```
+
+### Others
+
+Example of deployer's Dockerfile:
+
+```shell script
+FROM alpine:latest
+
+ARG KUBECONFIG_FILE
+ARG HELM_VERSION
+ARG ENVIRONMENT
+ARG LOCATION
+
+ENV K8S_ENVIRONMENT=${ENVIRONMENT}
+ENV K8S_LOCATION=${LOCATION}
+
+RUN apk update && apk add curl && apk add --no-cache --virtual deps \
+    bash \
+    openssl
+
+# Install kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl
+
+# Add kubectl config
+RUN mkdir ~/.kube
+COPY ./$KUBECONFIG_FILE /root/.kube/config
+
+# Install helm
+RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > ./get_helm.sh && \
+    chmod 700 ./get_helm.sh && \
+    ./get_helm.sh -v $HELM_VERSION
+
+# Cleanup
+RUN apk del deps && \
+    rm get_helm.sh
 ```
 
