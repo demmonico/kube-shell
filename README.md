@@ -1,22 +1,22 @@
 # Kube-shell
 
 This is a set of Bash scripts aimed in help to connect / manage Kubernetes cluster using prepared Docker image. 
-Useful, when you already have pre-built Docker images (e.g. deployer image for CI/CD), 
-which already have injected `kubeconfig` files and installed special software like `Helm`. 
-It can be stored at your container registry and pulled by CI/CD runner (e.g. GitLab runner). 
+Useful, when you already have pre-built Docker images (e.g. deployer image for CI/CD).  
+Such deployer could already have injected `kubeconfig` files and/or installed special software like `Helm`. 
+Usually it is stored at your container registry and is pulled by CI/CD runner (e.g. GitLab). 
 See deployer's example at the (Others section)[#others] 
 
-### Install
+## Install
 
 - download files or `git clone https://github.com/demmonico/kube-shell.git`
 - `cp config.example.yaml config.yaml`
 - put your clusters at the `config.yaml` (see [Configuration section](#configuration))
 - [optional] exec `./run.sh --alias <YOUR_ALIAS>` (suggested to use `ksh` as `<YOUR_ALIAS>`) for add to file `~/.bash_profile` the shortcut to runner
-- [optional, needed if do step 2] reload shell
+- [optional, needed if do previous step] reload shell
 
 <img src="docs/images/ksh-add-alias.gif" alt="KSH - Add alias" width=100%>
 
-### Configuration
+## Configuration
 
 To configure your kube-shell put inside `config.yaml`:
 
@@ -39,11 +39,11 @@ cluster_a:
     env_file: ".env.super_secrets_for_cluster_a"
 ```
 
-### Usage
+## Usage
 
 <img src="docs/images/ksh-usage.gif" alt="KSH - Add alias" width=100%>
 
-##### Help
+#### Help
 
 ```shell script
 ksh -h
@@ -51,7 +51,7 @@ ksh -h
 
 <img src="docs/images/ksh-options.png" alt="KSH - Options" width=100%>
 
-##### Connect to k8s cluster
+#### Connect to k8s cluster
 
 Connect to k8s `cluster_a` at `staging` environment (`staging` environment is default one)
 
@@ -69,7 +69,7 @@ Connect to k8s `cluster_a` at `prod` environment
 ksh -c cluster_a -e prod
 ```
 
-##### Operate at k8s cluster
+#### Operate at k8s cluster
 
 When you get into deployer, you can see that entrypoint will change prompt message and add some shortcut aliases for k8s. 
 Prompt message will look like `ksh::cluster_a/staging::/temp #` 
@@ -83,7 +83,7 @@ or `kga -n your_namespace` to check such resources as `cronjob`, `job`, `pod`.
 Also, you might be interested in watching for pods or jobs lists, then just run `kwg -n your_namespace`, 
 which is shortcut for `watch -n 5 kubectl get job,pod -n your_namespace` 
 
-##### Mount volume from host
+#### Mount volume from host
 
 By default, it mounts current shell folder to container as `/temp` in `readonly` mode. 
 To mount in `rw` mode just run `ksh` with option `--rw`.
@@ -92,7 +92,7 @@ To mount in `rw` mode just run `ksh` with option `--rw`.
 ksh --rw -c cluster_a
 ```
 
-### Others
+## Others
 
 Example of deployer's Dockerfile:
 
@@ -129,4 +129,3 @@ RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > ./get_
 RUN apk del deps && \
     rm get_helm.sh
 ```
-
