@@ -4,7 +4,7 @@ This is a set of Bash scripts aimed in help to connect / manage Kubernetes clust
 Useful, when you already have pre-built Docker images (e.g. deployer image for CI/CD).  
 Such deployer could already have injected `kubeconfig` files and/or installed special software like `Helm`. 
 Usually it is stored at your container registry and is pulled by CI/CD runner (e.g. GitLab). 
-See deployer's example at the (Others section)[#others] 
+See deployer's example at [Others section](#others) 
 
 ## Install
 
