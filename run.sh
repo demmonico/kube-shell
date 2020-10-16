@@ -16,11 +16,11 @@ RC='\033[0;31m'
 YC='\033[0;33m'
 NC='\033[0m' # No Color
 
-_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CURRENT_HOST_VOLUME_MODE='readonly'
 PORT_MAPPING=''
-CONFIG_YAML_PARSER='./parse_yaml_config.sh'
-CONFIG_YAML_FILE='config.yaml'
+_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CONFIG_YAML_PARSER="${_DIR}/parse_yaml_config.sh"
+CONFIG_YAML_FILE="${_DIR}/config.yaml"
 
 
 # read params
