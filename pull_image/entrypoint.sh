@@ -11,22 +11,34 @@ export PS1='${GC}ksh::${CLUSTER}/${RC}${ENV}${NC}::${BC}\w${NC} \# '
 
 alias ll="ls -al"
 
-# ksh shortcuts
+##### ksh shortcuts
 alias khelp='cat /etc/profile.d/shortcuts.sh | grep -E "(alias|\#\#\#)"'
 
+### resources
 alias k="kubectl"
 alias kg="kubectl get"
 alias kga="kubectl get cronjob,job,pod"
-alias ke="kubectl exec -ti"
-alias kl="kubectl logs"
 
+# List all k8s resources in namespace
+# kra -n <NAMESPACE>
+alias kra="kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found"
+
+### exec
+alias ke="kubectl exec -ti"
+# kec <pod_filter:selector for grep> -n <NAMESPACE> <CMD:printenv OR 'printenv PATH'>
+alias kec='f(){ kubectl get pods \$2 \$3 | grep \$1 | head -n 1 | awk '\''{print \$1}'\'' | xargs -I % kubectl exec -t \$2 \$3 % \$4; }; f'
+
+### monitor
+alias kl="kubectl logs --prefix=true"
 alias kwg="watch -n 5 kubectl get job,pod"
 
-### kcronen <cronjob_name> -n <namespace>
+### cronjob
+# kcronen/kcrondis <cronjob_name> -n <NAMESPACE>
 alias kcronen='f(){ kubectl patch cronjobs \$1 -p '\''{ "spec" : { "suspend" : false }}'\'' \$2 \$3; }; f'
 alias kcrondis='f(){ kubectl patch cronjobs \$1 -p '\''{ "spec" : { "suspend" : true }}'\'' \$2 \$3; }; f'
 
-### kcronen <cronjob_name> <job_suffix> -n <namespace>
+# Manually run job based on cronjob
+# kjobfrom <cronjob_name> <job_suffix> -n <NAMESPACE>
 alias kjobfrom='f(){ kubectl create job --from=cronjob/\$1 \$1-\$2 \$3 \$4; }; f'
 
 EOF
